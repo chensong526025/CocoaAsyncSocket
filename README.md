@@ -4,6 +4,14 @@
 
 CocoaAsyncSocket provides easy-to-use and powerful asynchronous socket libraries for Mac and iOS. The classes are described below.
 
+## About IPv6
+CocoaAsyncSocket support IPv6, but: 
+
+1. If you want to connect Apple NAT64, you must set the IPv4PreferredOverIPv6 to NO.
+2. If you still want to use IPv4 literal address. You must update my modification.
+
+>>>problem detail: if using IPv4 literal address to call getaddrinfo function, it will not set the port field. so I modify the source code to fix it. But, for Apple's guild, you must not use literal IP any more, use domain name always. If you are using domain name, getaddrinfo will be OK.
+
 ## Installation
 
 #### CocoaPods

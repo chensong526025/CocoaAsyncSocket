@@ -380,8 +380,14 @@ typedef NS_ENUM(NSInteger, GCDAsyncSocketError) {
 **/
 @property (atomic, readonly) BOOL isSecure;
 
-#pragma mark Reading
+#pragma mark 添加基于Block事件通报的读接口
+/*
+ * 跟原本的readDataToLength/readDataToData行为类似，事件通知方式直接通过block触发而不是delegate，block在每次触发之后就会被释放
+ */
+- (void)readDataToLength:(NSUInteger)length completion:(void (^)(NSData *data))handler;
+- (void)readDataToData:(NSData *)data completion:(void (^)(NSData *data))handler;
 
+#pragma mark Reading
 // The readData and writeData methods won't block (they are asynchronous).
 // 
 // When a read is complete the socket:didReadData:withTag: delegate method is dispatched on the delegateQueue.
@@ -636,6 +642,10 @@ typedef NS_ENUM(NSInteger, GCDAsyncSocketError) {
  * when the delegate method notifies you), then you should first copy the bytes, and pass the copy to this method.
 **/
 - (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+/*
+ * completionHandler will be call when data send
+ */
+- (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout completion:(void (^)())handler;
 
 /**
  * Returns progress of the current write, from 0.0 to 1.0, or NaN if no current write (use isnan() to check).
